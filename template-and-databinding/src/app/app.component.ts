@@ -30,7 +30,7 @@ export class AppComponent {
       new Hero(1,'A'),
       new Hero(2,'B'),
       new Hero(3,'C')
-    ]
+    ];
     this.show = true;
   }
 }

@@ -1,0 +1,56 @@
+<h1>Template Expression</h1>
+<!-- A template expression produces a value. Angular executes the expression and assigns it to a 
+property of a binding target; the target might be an HTML element, a component, or a directive. 
+Javascript expressions that have side effects are prohibited
+assignments (=, +=, -=, ...)
+new
+chaining expressions with ; or ,
+increment and decrement operators (++ and --) 
+no support for bitwise operator | and &
+-->
+
+{{1+1}}
+
+<!-- Expression Context is the component instance -->
+<!-- the below properties refers to the context of TemplateSyntaxComponent -->
+<p>{{title}}</p>
+<span [hidden]="isUnchanged">Changed</span>
+
+<!-- An expression may also refer to properties of the template's context such as a 
+  template input variable , for example let hero or #heroInput-->
+
+<p *ngFor="let hero of heroesObj">
+  {{hero.name}}
+</p>
+
+<!-- If template input variable and component variables share the same namespace
+  template variable name takes precedence, followed by name in directives context and lastly 
+component member names, preventing the name collision -->
+<!-- For the below example even though heroInput is assigned a value 'name' in TemplateSyntaxComponent
+heroInput still refers to HTMLInputElement -->
+<input #heroInput>{{heroInput}}
+
+<!-- template statement -->
+<h1>Template Statement</h1>
+<!-- A template statement responds to an event raised by a binding target 
+  such as an element, component, or directive. -->
+<!-- A template statement has a side effect. That's the whole point of an event. 
+  It's how you update application state from user action -->
+  {{hero}}
+  <button (click)="setHero1()">Set hero</button>
+  
+<!-- How ever following are not allowed
+  new
+  increment and decrement operators, ++ and --
+  operator assignment, such as += and -=
+  the bitwise operators | and &
+  the template expression operators
+   -->
+   <!-- Statements can only refer to what's in the statement context
+  Template context names take precedence over component context names.
+Template statements cannot refer to anything in global namespace -->
+<p>hero - {{hero}}</p>
+<div *ngFor="let hero of heroesObj">
+    <button (click)="setHero2(hero)">{{hero.name}}</button>
+</div>
+  
