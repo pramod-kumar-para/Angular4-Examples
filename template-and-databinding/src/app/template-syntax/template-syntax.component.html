@@ -1,11 +1,11 @@
 <h1>Template Expression</h1>
-<!-- A template expression produces a value. Angular executes the expression and assigns it to a 
-property of a binding target; the target might be an HTML element, a component, or a directive. 
+<!-- A template expression produces a value. Angular executes the expression and assigns it to a
+property of a binding target; the target might be an HTML element, a component, or a directive.
 Javascript expressions that have side effects are prohibited
 assignments (=, +=, -=, ...)
 new
 chaining expressions with ; or ,
-increment and decrement operators (++ and --) 
+increment and decrement operators (++ and --)
 no support for bitwise operator | and &
 -->
 
@@ -16,7 +16,7 @@ no support for bitwise operator | and &
 <p>{{title}}</p>
 <span [hidden]="isUnchanged">Changed</span>
 
-<!-- An expression may also refer to properties of the template's context such as a 
+<!-- An expression may also refer to properties of the template's context such as a
   template input variable , for example let hero or #heroInput-->
 
 <p *ngFor="let hero of heroesObj">
@@ -24,7 +24,7 @@ no support for bitwise operator | and &
 </p>
 
 <!-- If template input variable and component variables share the same namespace
-  template variable name takes precedence, followed by name in directives context and lastly 
+  template variable name takes precedence, followed by name in directives context and lastly
 component member names, preventing the name collision -->
 <!-- For the below example even though heroInput is assigned a value 'name' in TemplateSyntaxComponent
 heroInput still refers to HTMLInputElement -->
@@ -32,13 +32,13 @@ heroInput still refers to HTMLInputElement -->
 
 <!-- template statement -->
 <h1>Template Statement</h1>
-<!-- A template statement responds to an event raised by a binding target 
+<!-- A template statement responds to an event raised by a binding target
   such as an element, component, or directive. -->
-<!-- A template statement has a side effect. That's the whole point of an event. 
+<!-- A template statement has a side effect. That's the whole point of an event.
   It's how you update application state from user action -->
-  {{hero}}
-  <button (click)="setHero1()">Set hero</button>
-  
+{{hero}}
+<button (click)="setHero1()">Set hero</button>
+
 <!-- How ever following are not allowed
   new
   increment and decrement operators, ++ and --
@@ -46,11 +46,104 @@ heroInput still refers to HTMLInputElement -->
   the bitwise operators | and &
   the template expression operators
    -->
-   <!-- Statements can only refer to what's in the statement context
+<!-- Statements can only refer to what's in the statement context
   Template context names take precedence over component context names.
 Template statements cannot refer to anything in global namespace -->
 <p>hero - {{hero}}</p>
 <div *ngFor="let hero of heroesObj">
-    <button (click)="setHero2(hero)">{{hero.name}}</button>
+  <button (click)="setHero2(hero)">{{hero.name}}</button>
 </div>
-  
+
+<!-- binding syntax -->
+<h2>one-way from data source to target</h2>
+{{hero}}
+<p [hidden]="show">show target</p>
+
+<h2>One-way from view target to data source</h2>
+<button (click)="clickButton()">clickButton</button>
+
+
+<h2>Two way</h2>
+<input [(ngModel)]="myName" />
+<button (click)="printMyName()">Print my Name</button> {{myName}}
+
+<!-- attribute binding
+setting the properties of DOM elements, components, and directives.
+-->
+
+<!-- Binding targets -->
+<!-- Target of binding property is something in the DOM -->
+<img [src]="heroImageUrl" />
+<!-- setting a property to a directive -->
+<div [ngClass]="classes">[ngClass] binding to the classes property</div>
+<!-- We can also pass data to a child component using target binding -->
+
+<h2>One way In</h2>
+<!-- People often describe property binding as one-way data binding because it flows a value in one direction,
+from a component's data property into a target element property -->
+<!-- 1.	Avoid side effects while using template expressions.
+  	Stick to data properties
+    Use methods that just returns values and do no more. -->
+
+<!-- The template expression should evaluate to the type of value expected by the target property.
+    Return a string if the target property expects a string -->
+    <!-- If you omit the brackets, Angular treats the string as a constant and
+    initializes the target property with that string. It doesn't evaluate the string -->
+
+<h3> Content security </h3>
+<!-- Angular data binding is on alert for dangerous HTML.
+It sanitizes the values before displaying them. It will not allow HTML with script
+tags to leak into the browser, neither with interpolation nor property binding. -->
+<span [innerHTML]="evilTitle"></span>
+
+<h3> Attribute, class and style bindings </h3>
+
+<h4> Attribute binding </h4>
+<!-- Interpolation and property binding can only be done on properties.
+For attribute binding use [attr.*]-->
+<table>
+<tr>
+  <!-- Sets colspan value to 2 -->
+  <td [attr.colspan]="1+1">TD - TD</td>
+</tr>
+<tr>
+    <td>TD1</td>
+    <td>TD2</td>
+  </tr>
+</table>
+
+<h4> Class binding </h4>
+
+<!-- binding to specific class name -->
+<button [class.isActive]="isButtonClicked" on-click="toggleButton()">Active</button>
+<!-- binding to a string of class names -->
+<span [class]="myClasses">My dynamic classes</span>
+
+<h4>Inline styles with style binding</h4>
+
+<!-- style property name can be written with camelCase or dash-case -->
+<!-- setting a style property -->
+<span [style.color]="isButtonClicked?'green': 'yellow'">Style bind</span>
+<!-- setting style property with unit extension -->
+<span [style.fontSize.px]="isButtonClicked?16: 32">Style bind</span>
+
+<h4> Event binding </h4>
+<!-- Event binding syntax consists of a target event name within parentheses on the left of an equal sign,
+and a quoted template statement on the right. -->
+<button (click)="toggleButton()">Toggle Button</button>
+<!-- click is the target event -->
+<!-- Element events may be the more common targets, but Angular looks first to see if the
+ name matches an event property of a known directive, -->
+<button (myClick)="toggleButton=$event" >Toggle Button 2</button>
+<!-- In an event binding sets up an event handler for the target event -->
+<!-- The shape of the event object is determiend by the type of the target event -->
+<!-- If the target event is a native DOM, $event is the DOMEventObject -->
+<input [value]="myString" (input)="myString = $event.target.value" />
+{{myString}}
+
+<!-- Custom Events with eventEmitter -->
+<!-- Directives raise custom events with eventemitter -->
+<!-- The directive creates an EventEmitter and exposes it as an property -->
+<!-- use @Output to the eventEmitter created in the child component -->
+<app-child-component (propogateRequestToParent)="receivedEvent($event)"></app-child-component>
+{{valueEmitted}}
