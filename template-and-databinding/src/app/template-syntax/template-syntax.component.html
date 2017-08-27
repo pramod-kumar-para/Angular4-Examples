@@ -87,7 +87,7 @@ from a component's data property into a target element property -->
 
 <!-- The template expression should evaluate to the type of value expected by the target property.
     Return a string if the target property expects a string -->
-    <!-- If you omit the brackets, Angular treats the string as a constant and
+<!-- If you omit the brackets, Angular treats the string as a constant and
     initializes the target property with that string. It doesn't evaluate the string -->
 
 <h3> Content security </h3>
@@ -102,11 +102,11 @@ tags to leak into the browser, neither with interpolation nor property binding. 
 <!-- Interpolation and property binding can only be done on properties.
 For attribute binding use [attr.*]-->
 <table>
-<tr>
-  <!-- Sets colspan value to 2 -->
-  <td [attr.colspan]="1+1">TD - TD</td>
-</tr>
-<tr>
+  <tr>
+    <!-- Sets colspan value to 2 -->
+    <td [attr.colspan]="1+1">TD - TD</td>
+  </tr>
+  <tr>
     <td>TD1</td>
     <td>TD2</td>
   </tr>
@@ -134,12 +134,11 @@ and a quoted template statement on the right. -->
 <!-- click is the target event -->
 <!-- Element events may be the more common targets, but Angular looks first to see if the
  name matches an event property of a known directive, -->
-<button (myClick)="toggleButton=$event" >Toggle Button 2</button>
+<button (myClick)="toggleButton=$event">Toggle Button 2</button>
 <!-- In an event binding sets up an event handler for the target event -->
 <!-- The shape of the event object is determiend by the type of the target event -->
 <!-- If the target event is a native DOM, $event is the DOMEventObject -->
-<input [value]="myString" (input)="myString = $event.target.value" />
-{{myString}}
+<input [value]="myString" (input)="myString = $event.target.value" /> {{myString}}
 
 <!-- Custom Events with eventEmitter -->
 <!-- Directives raise custom events with eventemitter -->
@@ -147,3 +146,129 @@ and a quoted template statement on the right. -->
 <!-- use @Output to the eventEmitter created in the child component -->
 <app-child-component (propogateRequestToParent)="receivedEvent($event)"></app-child-component>
 {{valueEmitted}}
+
+
+<h2> Two way data binding </h2>
+<!-- [()] use banana in the box for 2 way data binding -->
+<app-two-way-data-bind [(size)]="fontSizePx" (resizeBy)="fontSizePx = $event"></app-two-way-data-bind>
+<div [style.font-size.px]="fontSizePx">Resizable Text</div>
+
+
+<!-- Attribute directives listen to and modify the behavior of other
+  HTML elements, attributes, properties and components -->
+
+<!-- To add or remove many CSS classes at the same time , use ngClass -->
+<button on-click="setClasses()">Click me!</button>
+<div [ngClass]="currentClasses">
+  ngClass
+</div>
+
+<!-- To set many inline styles at the same time, the NgStyle directive may be the better choice. -->
+<button on-click="setStyles()">Set styles!</button>
+<div [ngStyle]="currentStyles">
+  ngStyle
+</div>
+
+<!-- Before using the ngModel directive in a two-way data binding,
+you must import the FormsModule and add it to the NgModule's imports list -->
+<input [(ngModel)]="myName" (ngModelChange)="changeDetected()">
+
+<!-- detecting ngModel Change with ngModelChange-->
+<!-- ngModelChange detects only change on elements value-->
+<input [(ngModel)]="myName">
+
+<h2> Structural directives </h2>
+<!-- Dont forget asterisk infront of ngIf -->
+<span *ngIf="false"> hello world </span>
+<span *ngIf="true"> hello world </span>
+<!-- when ngIf is set false for a component, angular removes the component and its descendants from the DOM -->
+<!-- ngIf directive is often used to safe guard against null -->
+
+
+<!-- ngFor is a repeater directive -->
+<!-- the string assigned to ngFor is not a template expression, but its a micro syntax -->
+<!-- Angular translates this instruction into a <ng-template> around the host element,
+then uses this template repeatedly to create a new set of elements and bindings for each hero in the list. -->
+
+<p *ngFor="let hero of heroes">{{hero}}</p>
+<!-- In the above ngFor hero is called template input variable -->
+
+<!-- ngFor with index -->
+<!-- The index property of the NgFor directive context returns
+the zero-based index of the item in each iteration. -->
+<p *ngFor="let hero of heroes; let i = index">{{i+"    "+hero}}</p>
+
+<!-- To avoid a churn of repitions use trackBy -->
+<p *ngFor="let hero of heroesObj; trackBy: trackByHeroes">
+  {{hero.id}} {{hero.name}}
+</p>
+
+<!-- NgSwitch is like the JavaScript switch statement.
+It can display one element from among several possible elements, based on a switch condition.  -->
+<!-- NgSwitch is actually a set of three, cooperating directives: NgSwitch, NgSwitchCase, and NgSwitchDefault -->
+<div [ngSwitch]="myCase">
+  <p *ngSwitchCase="1">condition 1</p>
+  <p *ngSwitchCase="2">condition 2</p>
+  <p *ngSwitchCase="3">condition 3</p>
+  <p *ngSwitchCase="4">condition 4</p>
+</div>
+
+<!-- NgSwitchCase adds its element to the DOM when its bound value equals the switch value.
+NgSwitchDefault adds its element to the DOM when there is no selected NgSwitchCase. -->
+
+
+<div [ngSwitch]="myCase">
+    <p *ngSwitchCase="1">condition 1</p>
+    <p *ngSwitchCase="2">condition 2</p>
+    <p *ngSwitchDefault>condition 4</p>
+  </div>
+
+
+<h2> Template reference variables</h2>
+<!-- A template reference variable is often a reference to a DOM element within a template.
+It can also be a reference to an Angular component or directive or a web component. -->
+<!-- But a directive can change that behavior and set the value to something else, such as itself. -->
+<input #phone placeholder="phone number">
+
+<button (click)="callPhone(phone.value)">Call</button>
+<!-- A template reference variable (#phone) is not the same as a template input variable (let hero) -->
+<!-- The scope of a reference variable is the entire template.  -->
+<!-- You can use the ref- prefix alternative to # -->
+<input ref-phonenumber placeholder="phone number">
+
+<!-- Remeber all components are directives -->
+
+<!-- Input and Output -->
+<app-input-output [hero]="heroObj" (propogateRequest)="heroObj = $event"></app-input-output>
+{{heroObj.id}}
+
+
+<!-- Template expression operators -->
+<!-- The pipe operator ( | )
+The result of an expression might require some transformation before you're ready to use it in a binding.  -->
+<div>Title through uppercase pipe: {{'name' | uppercase}}</div>
+
+<!-- You can chain expressions through multiple pipes: -->
+
+<div>Title through uppercase pipe: {{'name' | uppercase | lowercase}}</div>
+
+<!-- And you can also apply parameters to a pipe: -->
+<div>Birthdate: {{dateObj| date:'longDate'}}</div>
+
+<!-- The json pipe is particularly helpful for debugging bindings: -->
+{{heroObj | json}}
+
+<!-- The safe navigation operator ( ?. ) and null property paths -->
+<!-- The Angular safe navigation operator (?.) is a fluent and convenient way to guard
+against null and undefined values in property paths. -->
+{{sampleObj?.value}}
+<!-- It works perfectly with long property paths such as a?.b?.c?.d. -->
+
+<!--No hero, no text -->
+<div *ngIf="hero">
+    The hero's name is {{hero!.name}}
+</div>
+
+<!-- When the Angular compiler turns your template into TypeScript code, it prevents TypeScript from reporting
+that hero.name might be null or undefined. -->
+
