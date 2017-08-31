@@ -1,0 +1,26 @@
+<input type="text" #hero/>
+<button on-click="addHero(hero.value); hero.value='';">Add hero</button>
+<button on-click="resetHeroes()">Reset heroes</button>
+<div *ngFor="let hero of heroes" appSpyOn>
+  {{hero.name}}
+</div>
+
+<p>
+on Change
+</p>
+<input [(ngModel)]="sampleName" />
+<app-onchanges [myName]="sampleName" [hero]="myHeroObj"></app-onchanges>
+<button (click)="changeHeroName()" >Pass value to input</button>
+
+{{myHeroObj.name}}
+
+
+<!-- Content projection -->
+
+<!-- The telltale signs of content projection are twofold:
+
+HTML between component element tags.
+The presence of <ng-content> tags in the component's template -->
+<app-content-projection>
+  <p> Content projection is done! </p>
+</app-content-projection>
