@@ -1,0 +1,6 @@
+:host {
+  color: pink;
+  font-size: 20px;
+}
+/* you can also import css files into the css files using the standard css @import */
+@import './test-import.css'
