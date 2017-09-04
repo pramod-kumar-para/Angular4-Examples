@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { ChildComponentComponent } from './child-component/child-component.component';
+import { SharedService } from './shared.service';
 
 @NgModule({
   declarations: [
@@ -12,7 +13,9 @@ import { ChildComponentComponent } from './child-component/child-component.compo
   imports: [
     BrowserModule
   ],
-  providers: [],
+  providers: [
+    SharedService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

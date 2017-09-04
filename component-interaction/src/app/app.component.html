@@ -1,1 +1,12 @@
-<app-child-component [myObj]="myObject" [alias]="name"></app-child-component>
+<app-child-component [myObj]="myObject" [alias]="name" [message]="'Hello world'"
+(propogateRequest)="printMessage($event)" #myChild></app-child-component>
+{{myMessage}}
+
+<!-- To access child component model, use template input reference variables like #myChild above-->
+<!-- The local variable approach is simple and easy. But it is limited because
+the parent-child wiring must be done entirely within the parent template. The parent component itself has no access to the child. -->
+<!-- You can't use the local variable technique if an instance of the parent component class must read or write child component values or must call child component methods. -->
+<p>{{myChild.age}}</p>
+
+<!-- When the parent component class requires that kind of access, inject the child component into the parent as a ViewChild. -->
+<button (click)="AccessChildValue()">Print Child component value</button>
